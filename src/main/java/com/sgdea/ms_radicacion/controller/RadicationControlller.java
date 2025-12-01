@@ -3,32 +3,26 @@ package com.sgdea.ms_radicacion.controller;
 import com.sgdea.ms_radicacion.domain.sequence.service.GenerarSecuenciaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/v1/generar-secuencia")
-@RequiredArgsConstructor
+@RequestMapping("/api/v1/radicacion") // Base path del controlador
+@RequiredArgsConstructor // Para inyectar GenerarSecuenciaService
 public class RadicationControlller {
 
-    // Inyección del servicio
     private final GenerarSecuenciaService generarSecuenciaService;
 
-    // CAMBIO: Endpoint para generar secuencia con año
-    @GetMapping("/{nombreCortoTipo}")
-    public Mono<ResponseEntity<String>> generarSecuencia(@PathVariable String nombreCortoTipo) {
-        return generarSecuenciaService.generarSecuencia(nombreCortoTipo)
-                .map(ResponseEntity::ok) // 2. Si todo va bien, crea una respuesta 200 OK
-                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build())) // 3. Si no se encuentra la secuencia, devuelve 404 Not Found
-                .onErrorResume(ex -> Mono.just(ResponseEntity.internalServerError().body("Error: " + ex.getMessage()))); // 4. Manejo de errores
-    }
-
-    // CAMBIO: Endpoint para generar secuencia sin año
-    @GetMapping("/sin-year/{nombreCortoTipo}")
-    public Mono<ResponseEntity<String>> generarSecuenciaSinYear(@PathVariable String nombreCortoTipo) {
-        return generarSecuenciaService.generarSecuenciaSinYear(nombreCortoTipo)
-                .map(ResponseEntity::ok)
-                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()))
-                .onErrorResume(ex -> Mono.just(ResponseEntity.internalServerError().body("Error: " + ex.getMessage())));
+    @PostMapping("/generar-radicado") // Endpoint para generar radicado
+    public Mono<ResponseEntity<Map<String, String>>> generarRadicado(@RequestParam String tipoRadicado) {
+        return generarSecuenciaService.generarSecuencia(tipoRadicado)
+                .map(radicado -> ResponseEntity.ok(Collections.singletonMap("radicado", radicado)))
+                .defaultIfEmpty(ResponseEntity.notFound().build()); // Maneja el caso donde el Mono es vacío (ej. secuencia no encontrada)
     }
 }

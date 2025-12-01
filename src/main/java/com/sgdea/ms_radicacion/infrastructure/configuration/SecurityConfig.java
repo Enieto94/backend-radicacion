@@ -22,6 +22,8 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/webjars/swagger-ui/**",
+            // Nuevo endpoint para generar radicado (añadido como público para pruebas)
+            "/api/v1/radicacion/generar-radicado"
     };
 
     @Bean
@@ -30,12 +32,12 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .headers(headers -> headers
-                //.frameOptions(spec -> spec.mode(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec.Mode.SAMEORIGIN)) // Descomentado
+                // Usamos el nombre completamente cualificado para evitar problemas de resolución de símbolos
+                //.frameOptions(spec -> spec.mode(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec.Mode.SAMEORIGIN))
                 .hsts(hstsSpec -> hstsSpec.maxAge(Duration.ofDays(365)).includeSubdomains(true))
                 .contentSecurityPolicy(cspSpec -> cspSpec.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; report-uri /api/v1/csp-report;"))
             )
             .authorizeExchange(exchange -> exchange
-                // Se permite el acceso a los endpoints públicos
                 .pathMatchers(PUBLIC_ENDPOINTS).permitAll()
                 .anyExchange().authenticated()
             )
