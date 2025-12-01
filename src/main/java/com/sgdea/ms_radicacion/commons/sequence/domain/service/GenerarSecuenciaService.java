@@ -1,4 +1,4 @@
-package com.prolinktic.sgdea.commons.sequence.domain.service;
+package com.sgdea.ms_radicacion.commons.sequence.domain.service;
 
 /**
  * Interfaz para la generación de números de secuencia únicos.
