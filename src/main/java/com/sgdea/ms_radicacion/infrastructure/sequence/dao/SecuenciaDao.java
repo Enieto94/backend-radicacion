@@ -1,6 +1,7 @@
 package com.sgdea.ms_radicacion.infrastructure.sequence.dao;
 
 import com.sgdea.ms_radicacion.infrastructure.sequence.dto.SecuenciaDto;
+import reactor.core.publisher.Mono;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -8,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository // O @Component si es una clase
 public interface SecuenciaDao {
-    SecuenciaDto encontrarPorNombreCorto(String nombreCortoTipo);
+    Mono<SecuenciaDto> encontrarPorNombreCorto(String nombreCortoTipo);
 }
