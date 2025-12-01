@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 
 import java.util.Map;
@@ -24,21 +25,20 @@ public class TokenController {
     }
 
     @PostMapping(path = "/all-platforms", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getAllPlatformsToken(@RequestBody Map<String, String> credentials) {
+    public Mono<ResponseEntity<Object>> getAllPlatformsToken(@RequestBody Map<String, String> credentials) {
         // Extraemos username y password por si quieres validarlos o loguearlos
-        String username = credentials.get("username");
-        String password = credentials.get("password");
+        // En un contexto reactivo, esto se haría de forma no bloqueante si fuera necesario
+        String username = credentials.get("username"); // Solo para referencia, no se usa directamente en la llamada
+        String password = credentials.get("password"); // Solo para referencia, no se usa directamente en la llamada
 
-        // Llamada al servicio remoto enviando el mismo body
-        Object body = webClient
+        // Llamada al servicio remoto enviando el mismo body de forma reactiva
+        return webClient
                 .post()
                 .uri("/api/v1/autenticacion/token/all/platforms")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(credentials)
                 .retrieve()
                 .bodyToMono(Object.class)
-                .block();
-
-        return ResponseEntity.ok(body);
+                .map(ResponseEntity::ok); // Envuelve el cuerpo en ResponseEntity.ok()
     }
 }
