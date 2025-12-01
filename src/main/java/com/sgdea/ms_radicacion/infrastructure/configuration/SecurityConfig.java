@@ -20,10 +20,10 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .headers(headers -> headers
-                        .frameOptions(frameOptions -> frameOptions.mode(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec.Mode.SAMEORIGIN))
+                        .frameOptions(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec::sameOrigin)
                         .contentTypeOptions(ServerHttpSecurity.HeaderSpec.ContentTypeOptionsSpec::disable)
                         .hsts(hsts -> hsts.maxAge(java.time.Duration.ofDays(365)).includeSubdomains(true))
-                        .contentSecurityPolicyReportOnly(csp -> csp.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; report-uri /api/v1/csp-report;"))
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; report-uri /api/v1/csp-report;"))
                 )
                 .authorizeExchange(authorize -> authorize
                         .pathMatchers(PUBLIC_ENDPOINTS).permitAll()
