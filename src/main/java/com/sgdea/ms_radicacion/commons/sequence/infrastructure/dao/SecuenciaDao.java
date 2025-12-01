@@ -1,6 +1,6 @@
 package com.sgdea.ms_radicacion.commons.sequence.infrastructure.dao;
 
-import com.prolinktic.sgdea.commons.sequence.infrastructure.dto.SecuenciaDto;
+import com.sgdea.ms_radicacion.commons.sequence.infrastructure.dto.SecuenciaDto;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -1,6 +1,6 @@
-package com.prolinktic.sgdea.commons.sequence.infrastructure.dto;
+package com.sgdea.ms_radicacion.commons.sequence.infrastructure.dto;
 
-import com.prolinktic.sgdea.commons.sequence.domain.model.TipoSecuencia;
+import com.sgdea.ms_radicacion.commons.sequence.domain.model.TipoSecuencia;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
