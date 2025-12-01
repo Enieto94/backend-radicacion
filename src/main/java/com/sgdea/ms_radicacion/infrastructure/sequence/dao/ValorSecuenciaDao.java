@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface ValorSecuenciaDao {
     ValorSecuencia crear(ValorSecuencia valorSecuencia);
 
-    ValorSecuencia crearQuery(String nombre, Long tipoSecuenciaId); // Método usado en GeneradorSecuenciaServiceImpl
+    ValorSecuencia crearQuery(String nombre, Long tipoSecuenciaId); // Metodo usado en GeneradorSecuenciaServiceImpl
 
 }
