@@ -14,7 +14,15 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] PUBLIC_ENDPOINTS = {}; // Este array está vacío, por lo que la línea que lo usa debe ser eliminada o el array llenado.
+    private static final String[] PUBLIC_ENDPOINTS = {
+            // Endpoint de login/token
+            "/api/v1/tokens/all-platforms",
+            // Endpoints de documentación (Swagger)
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/webjars/swagger-ui/**",
+    };
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -27,7 +35,8 @@ public class SecurityConfig {
                 .contentSecurityPolicy(cspSpec -> cspSpec.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; report-uri /api/v1/csp-report;"))
             )
             .authorizeExchange(exchange -> exchange
-                // Eliminada la línea problemática, ya que PUBLIC_ENDPOINTS está vacío
+                // Se permite el acceso a los endpoints públicos
+                .pathMatchers(PUBLIC_ENDPOINTS).permitAll()
                 .anyExchange().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));

@@ -1,27 +1,42 @@
 package com.sgdea.ms_radicacion.controller;
 
+import com.sgdea.ms_radicacion.domain.sequence.service.GenerarSecuenciaService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collections;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/generar-secuencia")
-
+@RequiredArgsConstructor
 public class RadicationControlller {
 
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> holaMundo() {
-        // JSON vacío: {}
-        Map<String, Object> body = Collections.emptyMap();
+    // Inyección del servicio
+    private final GenerarSecuenciaService generarSecuenciaService;
 
-        // Cabecera con mensaje "hola mundo"
-        return ResponseEntity
-                .ok()
-                .header("X-Mensaje", "hola mundo")
-                .body(body);
+    // CAMBIO: Endpoint para generar secuencia con año
+    @GetMapping("/{nombreCortoTipo}")
+    public Mono<ResponseEntity<String>> generarSecuencia(@PathVariable String nombreCortoTipo) {
+        Mono<String> resultado = generarSecuenciaService.generarSecuencia(nombreCortoTipo);
+        if (resultado == null) {
+            resultado = Mono.empty();
+        }
+        return resultado
+                .map(valor -> ResponseEntity.ok(valor)) // 2. Si todo va bien, crea una respuesta 200 OK
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build())) // 3. Si no se encuentra la secuencia, devuelve 404 Not Found
+                .onErrorResume(ex -> Mono.just(ResponseEntity.internalServerError().body("Error: " + ex.getMessage()))); // 4. Manejo de errores
+    }
+
+    // CAMBIO: Endpoint para generar secuencia sin año
+    @GetMapping("/sin-year/{nombreCortoTipo}")
+    public Mono<ResponseEntity<String>> generarSecuenciaSinYear(@PathVariable String nombreCortoTipo) {
+        Mono<String> resultado = generarSecuenciaService.generarSecuenciaSinYear(nombreCortoTipo);
+        if (resultado == null) {
+            resultado = Mono.empty();
+        }
+        return resultado
+                .map(valor -> ResponseEntity.ok(valor))
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()))
+                .onErrorResume(ex -> Mono.just(ResponseEntity.internalServerError().body("Error: " + ex.getMessage())));
     }
 }

@@ -5,7 +5,9 @@ package com.sgdea.ms_radicacion.domain.sequence.service;
  */
 public interface GenerarSecuenciaService {
 
-    String generarSecuencia(String nombreCortoTipo);
+    // CAMBIO: Devuelve Mono<String> para ser reactivo
+    Mono<String> generarSecuencia(String nombreCortoTipo);
 
-    String generarSecuenciaSinYear(String nombreCortoTipo);
+    // CAMBIO: Devuelve Mono<String> para ser reactivo
+    Mono<String> generarSecuenciaSinYear(String nombreCortoTipo);
 }

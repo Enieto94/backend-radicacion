@@ -7,6 +7,7 @@ import com.sgdea.ms_radicacion.infrastructure.sequence.dao.ValorSecuenciaDao;
 import com.sgdea.ms_radicacion.infrastructure.sequence.dto.SecuenciaDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 
@@ -22,42 +23,43 @@ public class GeneradorSecuenciaServiceImpl implements GenerarSecuenciaService { 
     }
 
     @Override
-    public String generarSecuencia(String nombreCortoTipo) {
+    public Mono<String> generarSecuencia(String nombreCortoTipo) {
+        // CAMBIO: Se usa una cadena reactiva con flatMap y map
+        return secuenciaDao.encontrarPorNombreCorto(nombreCortoTipo)
+                .switchIfEmpty(Mono.error(new NullPointerException("No existe configuracion para este tipo de secuencia")))
+                .flatMap(secuenciaConf -> {
+                    final String nombre = new StringBuilder()
+                            .append(secuenciaConf.getPrefijo())
+                            .append(LocalDate.now().getYear())
+                            .toString();
 
-        SecuenciaDto secuenciaConf = secuenciaDao.encontrarPorNombreCorto(nombreCortoTipo);
-        if(secuenciaConf == null)
-            throw new NullPointerException("No existe configuracion para este tipo de secuencia");
+                    Mono<ValorSecuencia> valorSecuenciaMono = valorSecuenciaDao.crearQuery(nombre, secuenciaConf.getTipoSecuencia().getId());
 
-        final String nombre = new StringBuilder()
-                .append(secuenciaConf.getPrefijo())
-                .append(LocalDate.now().getYear())
-                .toString();
-
-        ValorSecuencia valorSecuencia = valorSecuenciaDao.crearQuery(nombre,secuenciaConf.getTipoSecuencia().getId());
-        return new StringBuilder()
-                .append(nombre)
-                .append(StringUtils.leftPad("" + valorSecuencia.getId(), secuenciaConf.getDigitosSecuencia().intValue(), "0"))
-                .toString();
+                    // Usamos zipWith para combinar el resultado de valorSecuenciaMono con la configuración que ya tenemos
+                    return valorSecuenciaMono.map(valorSecuencia -> new StringBuilder()
+                            .append(nombre)
+                            .append(StringUtils.leftPad("" + valorSecuencia.getId(), secuenciaConf.getDigitosSecuencia().intValue(), "0"))
+                            .toString());
+                });
     }
 
     @Override
-    public String generarSecuenciaSinYear(String nombreCortoTipo) {
-        SecuenciaDto secuenciaConf = secuenciaDao.encontrarPorNombreCorto(nombreCortoTipo);
-        if(secuenciaConf == null)
-            throw new NullPointerException("No existe configuracion para este tipo de secuencia");
+    public Mono<String> generarSecuenciaSinYear(String nombreCortoTipo) {
+        // CAMBIO: Se usa una cadena reactiva con flatMap y map
+        return secuenciaDao.encontrarPorNombreCorto(nombreCortoTipo)
+                .switchIfEmpty(Mono.error(new NullPointerException("No existe configuracion para este tipo de secuencia")))
+                .flatMap(secuenciaConf -> {
+                    final String nombre = secuenciaConf.getPrefijo();
 
-        final String nombre = new StringBuilder()
-                .append(secuenciaConf.getPrefijo())
-                .toString();
+                    Mono<ValorSecuencia> valorSecuenciaMono = valorSecuenciaDao.crear(ValorSecuencia.builder()
+                            .tipoSecuencia(secuenciaConf.getTipoSecuencia())
+                            .valor(nombre)
+                            .build());
 
-        ValorSecuencia valorSecuencia = valorSecuenciaDao.crear(ValorSecuencia.builder()
-                .tipoSecuencia(secuenciaConf.getTipoSecuencia())
-                .valor(nombre)
-                .build());
-        ;
-        return new StringBuilder()
-                .append(nombre)
-                .append(StringUtils.leftPad("" + valorSecuencia.getId(), secuenciaConf.getDigitosSecuencia().intValue(), "0"))
-                .toString();
+                    return valorSecuenciaMono.map(valorSecuencia -> new StringBuilder()
+                            .append(nombre)
+                            .append(StringUtils.leftPad("" + valorSecuencia.getId(), secuenciaConf.getDigitosSecuencia().intValue(), "0"))
+                            .toString());
+                });
     }
 }
