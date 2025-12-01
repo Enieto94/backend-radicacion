@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/radicacion")
+@RequestMapping("/api/v1/generar-secuencia")
 
 public class RadicationControlller {
 
