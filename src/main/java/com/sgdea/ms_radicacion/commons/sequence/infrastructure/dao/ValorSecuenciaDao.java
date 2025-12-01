@@ -1,6 +1,7 @@
 package com.prolinktic.sgdea.commons.sequence.infrastructure.dao;
 
 import com.prolinktic.sgdea.commons.sequence.domain.model.ValorSecuencia;
+import com.sgdea.ms_radicacion.commons.sequence.domain.model.ValorSecuencia;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +12,6 @@ public interface ValorSecuenciaDao {
     ValorSecuencia crear(ValorSecuencia valorSecuencia);
 
     ValorSecuencia crearQuery(String nombre, Long tipoSecuenciaId); // Método usado en GeneradorSecuenciaServiceImpl
+
+    com.sgdea.ms_radicacion.commons.sequence.domain.model.ValorSecuencia crear(com.sgdea.ms_radicacion.commons.sequence.domain.model.ValorSecuencia build);
 }

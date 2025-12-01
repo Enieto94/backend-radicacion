@@ -2,8 +2,8 @@ package com.sgdea.ms_radicacion.commons.sequence.application.service;
 
 
 import com.prolinktic.sgdea.commons.sequence.infrastructure.dao.ValorSecuenciaDao;
-import com.prolinktic.sgdea.commons.sequence.infrastructure.dto.SecuenciaDto;
-import com.prolinktic.sgdea.commons.sequence.domain.service.GenerarSecuenciaService;
+import com.sgdea.ms_radicacion.commons.sequence.infrastructure.dto.SecuenciaDto;
+import com.sgdea.ms_radicacion.commons.sequence.domain.service.GenerarSecuenciaService;
 
 import com.sgdea.ms_radicacion.commons.sequence.domain.model.ValorSecuencia;
 import com.sgdea.ms_radicacion.commons.sequence.infrastructure.dao.SecuenciaDao;
