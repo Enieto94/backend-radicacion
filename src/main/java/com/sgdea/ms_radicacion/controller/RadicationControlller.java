@@ -17,12 +17,8 @@ public class RadicationControlller {
     // CAMBIO: Endpoint para generar secuencia con año
     @GetMapping("/{nombreCortoTipo}")
     public Mono<ResponseEntity<String>> generarSecuencia(@PathVariable String nombreCortoTipo) {
-        Mono<String> resultado = generarSecuenciaService.generarSecuencia(nombreCortoTipo);
-        if (resultado == null) {
-            resultado = Mono.empty();
-        }
-        return resultado
-                .map(valor -> ResponseEntity.ok(valor)) // 2. Si todo va bien, crea una respuesta 200 OK
+        return generarSecuenciaService.generarSecuencia(nombreCortoTipo)
+                .map(ResponseEntity::ok) // 2. Si todo va bien, crea una respuesta 200 OK
                 .switchIfEmpty(Mono.just(ResponseEntity.notFound().build())) // 3. Si no se encuentra la secuencia, devuelve 404 Not Found
                 .onErrorResume(ex -> Mono.just(ResponseEntity.internalServerError().body("Error: " + ex.getMessage()))); // 4. Manejo de errores
     }
@@ -30,12 +26,8 @@ public class RadicationControlller {
     // CAMBIO: Endpoint para generar secuencia sin año
     @GetMapping("/sin-year/{nombreCortoTipo}")
     public Mono<ResponseEntity<String>> generarSecuenciaSinYear(@PathVariable String nombreCortoTipo) {
-        Mono<String> resultado = generarSecuenciaService.generarSecuenciaSinYear(nombreCortoTipo);
-        if (resultado == null) {
-            resultado = Mono.empty();
-        }
-        return resultado
-                .map(valor -> ResponseEntity.ok(valor))
+        return generarSecuenciaService.generarSecuenciaSinYear(nombreCortoTipo)
+                .map(ResponseEntity::ok)
                 .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()))
                 .onErrorResume(ex -> Mono.just(ResponseEntity.internalServerError().body("Error: " + ex.getMessage())));
     }

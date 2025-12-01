@@ -3,6 +3,7 @@ package com.sgdea.ms_radicacion.infrastructure.sequence.dao;
 import com.sgdea.ms_radicacion.domain.sequence.model.ValorSecuencia;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
 @Repository
 @RequiredArgsConstructor
@@ -11,16 +12,12 @@ public class ValorSecuenciaDaoImpl implements ValorSecuenciaDao {
     private final ValorSecuenciaRepository valorSecuenciaRepository;
 
     @Override
-    public ValorSecuencia crear(ValorSecuencia valorSecuencia) {
-        // En un contexto reactivo, esto debería devolver un Mono<ValorSecuencia>
-        // Para mantener la compatibilidad con la interfaz, bloqueamos el Mono aquí.
-        return valorSecuenciaRepository.save(valorSecuencia).block();
+    public Mono<ValorSecuencia> crear(ValorSecuencia valorSecuencia) {
+        return valorSecuenciaRepository.save(valorSecuencia);
     }
 
     @Override
-    public ValorSecuencia crearQuery(String nombre, Long tipoSecuenciaId) {
-        // En un contexto reactivo, esto debería devolver un Mono<ValorSecuencia>
-        // Para mantener la compatibilidad con la interfaz, bloqueamos el Mono aquí.
-        return valorSecuenciaRepository.crearValorSecuencia(nombre, tipoSecuenciaId).block();
+    public Mono<ValorSecuencia> crearQuery(String nombre, Long tipoSecuenciaId) {
+        return valorSecuenciaRepository.crearValorSecuencia(nombre, tipoSecuenciaId);
     }
 }

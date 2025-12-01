@@ -1,5 +1,7 @@
 package com.sgdea.ms_radicacion.domain.sequence.service;
 
+import reactor.core.publisher.Mono;
+
 /**
  * Interfaz para la generación de números de secuencia únicos.
  */
