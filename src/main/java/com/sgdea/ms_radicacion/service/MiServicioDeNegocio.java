@@ -1,6 +1,6 @@
 package com.sgdea.ms_radicacion.service;
 
-import com.prolinktic.sgdea.commons.sequence.domain.service.GenerarSecuenciaService;
+import com.sgdea.ms_radicacion.domain.sequence.service.GenerarSecuenciaService;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 

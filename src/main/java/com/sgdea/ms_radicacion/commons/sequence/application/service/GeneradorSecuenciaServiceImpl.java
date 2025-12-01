@@ -10,6 +10,7 @@ import com.sgdea.ms_radicacion.commons.sequence.infrastructure.dao.SecuenciaDao;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import org.apache.commons.lang3.StringUtils; // Importación necesaria
 
 @Service
 public class GeneradorSecuenciaServiceImpl implements GenerarSecuenciaService { // Implementa la interfaz del dominio
