@@ -15,15 +15,7 @@ import java.time.Duration;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            // Endpoint de login/token
-            "/api/v1/tokens/all-platforms",
-            // Endpoints de documentación (Swagger)
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/webjars/swagger-ui/**",
-            // Nuevo endpoint para generar radicado (añadido como público para pruebas)
-            "/api/v1/radicacion/generar-radicado"
+
     };
 
     @Bean

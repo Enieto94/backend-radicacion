@@ -1,5 +1,6 @@
 package com.sgdea.ms_radicacion.infrastructure.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -10,17 +11,13 @@ import java.util.Arrays;
 
 @Configuration
 public class CorsConfig {
+    @Value("${app.cors.allowed-origins:*}")
+    private String allowedOrigins;
 
     @Bean
     CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList(
-                "https://frontend-uat-711792583187.us-east1.run.app",
-                "https://gcpfront.positivasgdea.com",
-                "https://docu.positiva.gov.co",
-                "http://localhost:3000",
-                "http://localhost:4200"
-        ));
+
         corsConfig.addAllowedMethod("*");
         corsConfig.addAllowedHeader("*");
         corsConfig.addExposedHeader("X-Filename");

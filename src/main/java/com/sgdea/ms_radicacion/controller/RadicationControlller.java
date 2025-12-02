@@ -22,7 +22,10 @@ public class RadicationControlller {
     @PostMapping("/generar-radicado") // Endpoint para generar radicado
     public Mono<ResponseEntity<Map<String, String>>> generarRadicado(@RequestParam String tipoRadicado) {
         return generarSecuenciaService.generarSecuencia(tipoRadicado)
+                // 1. Si el servicio devuelve un radicado, lo mapeamos a una respuesta 200 OK.
                 .map(radicado -> ResponseEntity.ok(Collections.singletonMap("radicado", radicado)))
-                .defaultIfEmpty(ResponseEntity.notFound().build()); // Maneja el caso donde el Mono es vacío (ej. secuencia no encontrada)
+                // 2. Si el Mono llega aquí vacío (ya sea porque no se encontró o porque un error fue manejado y convertido a vacío),
+                //    se devuelve una respuesta 404 Not Found.
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }
