@@ -15,13 +15,18 @@ import java.time.Duration;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-
+            // Endpoints de documentación (Swagger)
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/webjars/swagger-ui/**",
+            // Endpoint para generar la secuencia MTR
+            "/api/v1/mtr/generar-secuencia"
     };
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        http
-            .cors(Customizer.withDefaults())
+        http.cors(Customizer.withDefaults())
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .headers(headers -> headers
                 // Usamos el nombre completamente cualificado para evitar problemas de resolución de símbolos
